@@ -1,4 +1,5 @@
 using BookstoreSystem.Data;
+using BookstoreSystem.Mappings;
 using BookstoreSystem.Repositories;
 using BookstoreSystem.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,8 @@ namespace BookstoreSystem
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
             builder.Services.AddScoped<IWriterRepository, WriterRepository>();
+
+            builder.Services.AddAutoMapper(typeof(EntitiesToDTOMAppingProfile));
 
             var app = builder.Build();
 
