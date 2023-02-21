@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookstoreSystem.DTOs;
 using BookstoreSystem.Models;
+using BookstoreSystem.Repositories;
 using BookstoreSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,6 +46,24 @@ namespace BookstoreSystem.Controllers
         public async Task<ActionResult<BookDTO>> Add([FromBody] BookDTO bookDTO)
         {
             Book book = _mapper.Map<Book>(bookDTO);
+
+            Book savedBook = await _bookRepository.Add(book);
+
+            return Ok(_mapper.Map<BookDTO>(savedBook));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<BookDTO>> Update([FromBody] BookDTO bookDTO, int id)
+        {
+            bookDTO.Id = id;
+            Book book = _mapper.Map<Book>(bookDTO);
+
+            bool foundId = _bookRepository.IdExists(id);
+
+            if (!foundId)
+            {
+                return NotFound();
+            }
 
             Book savedBook = await _bookRepository.Add(book);
 
