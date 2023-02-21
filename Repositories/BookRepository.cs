@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookstoreSystem.Repositories
 {
-    public class BookRepositorie : IBookRepositorie
+    public class BookRepository : IBookRepository
     {
         private readonly BookstoreSystemDBContext _dbContext;
-        public BookRepositorie(BookstoreSystemDBContext bookstoreSystemDBContext)
+        public BookRepository(BookstoreSystemDBContext bookstoreSystemDBContext)
         {
             _dbContext = bookstoreSystemDBContext;
         }
@@ -17,17 +17,14 @@ namespace BookstoreSystem.Repositories
         {
             return await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == id);
         }
-
         public async Task<List<Book>> GetByTitle(string title)
         {
             return await _dbContext.Books.Where(x => x.Title.Contains(title)).ToListAsync();
         }
-
         public async Task<List<Book>> GetAll()
         {
             return await _dbContext.Books.ToListAsync();
         }
-
         public async Task<Book> Add(Book book)
         {
             await _dbContext.Books.AddAsync(book);
@@ -35,15 +32,13 @@ namespace BookstoreSystem.Repositories
 
             return book;
         }
-
-        public bool BookExists(int id)
+        public bool IdExists(int id)
         {
             return _dbContext.Books.Any(x => x.Id == id);
         }
-
         public async Task<Book> Update(Book book, int id)
         {
-            bool bookExists = BookExists(id);
+            bool bookExists = IdExists(id);
 
 
             if (!bookExists)
@@ -56,7 +51,6 @@ namespace BookstoreSystem.Repositories
 
             return book;
         }
-
         public async Task<int> Delete(int id)
         {
             return await _dbContext.Books.Where(x => x.Id == id).ExecuteDeleteAsync();

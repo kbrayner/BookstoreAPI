@@ -18,12 +18,14 @@ namespace BookstoreSystem
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddEntityFrameworkNpgsql()
-                .AddDbContext<BookstoreSystemDBContext>(
+            builder.Services.AddDbContext<BookstoreSystemDBContext>(
                     options => options.UseNpgsql(builder.Configuration.GetConnectionString("DataBase"))
                 );
 
-            builder.Services.AddScoped<IBookRepositorie, BookRepositorie>();
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
+            builder.Services.AddScoped<IWriterRepository, WriterRepository>();
 
             var app = builder.Build();
 

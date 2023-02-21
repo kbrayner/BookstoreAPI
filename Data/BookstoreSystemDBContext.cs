@@ -1,4 +1,5 @@
-﻿using BookstoreSystem.Models;
+﻿using BookstoreSystem.Data.Map;
+using BookstoreSystem.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookstoreSystem.Data
@@ -20,6 +21,10 @@ namespace BookstoreSystem.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new CategoryMap());
+            modelBuilder.ApplyConfiguration(new PublisherMap());
+            modelBuilder.ApplyConfiguration(new WriterMap());
+            modelBuilder.ApplyConfiguration(new BookMap());
             base.OnModelCreating(modelBuilder);
         }
     }

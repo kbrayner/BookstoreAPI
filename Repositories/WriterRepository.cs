@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookstoreSystem.Repositories
 {
-    public class WriterRepositorie : IWriterRepositorie
+    public class WriterRepository : IWriterRepository
     {
         private readonly BookstoreSystemDBContext _dbContext;
         public async Task<Writer> GetById(int id)
@@ -27,13 +27,13 @@ namespace BookstoreSystem.Repositories
 
             return writer;
         }
-        public async Task<bool> WriterExists(int id)
+        public bool IdExists(int id)
         {
             return _dbContext.Writers.Any(x => x.Id == id);
         }
         public async Task<Writer> Update(Writer writer, int id)
         {
-            bool writerExists = await this.WriterExists(id);
+            bool writerExists = IdExists(id);
 
 
             if (!writerExists)

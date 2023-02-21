@@ -2,15 +2,14 @@
 
 namespace BookstoreSystem.Repositories.Interfaces
 {
-    public interface IBookRepositorie
+    public interface IBookRepository
     {
         Task<Book> GetById(int id);
         Task<List<Book>> GetByTitle(string title);
         Task<List<Book>> GetAll();
         Task<Book> Add(Book book);
-        bool BookExists(int id);
+        bool IdExists(int id);
         Task<Book> Update(Book book, int id);
         Task<int> Delete(int id);
-    
     }
 }
