@@ -8,6 +8,12 @@ namespace BookstoreSystem.Repositories
     public class WriterRepository : IWriterRepository
     {
         private readonly BookstoreSystemDBContext _dbContext;
+
+        public WriterRepository(BookstoreSystemDBContext bookstoreSystemDBContext)
+        {
+            _dbContext = bookstoreSystemDBContext;
+        }
+
         public async Task<Writer> GetById(int id)
         {
             return await _dbContext.Writers.FirstOrDefaultAsync(x => x.Id == id);
