@@ -14,9 +14,8 @@ namespace BookstoreSystem.Data.Map
             builder.Property(book => book.Resume).HasMaxLength(500);
             builder.Property(book => book.PagesNumber).IsRequired();
             builder.Property(book => book.ReleaseDate).IsRequired();
-/*            builder.Property(book => book.Publisher).IsRequired();
-            builder.Property(book => book.Writers).IsRequired();
-            builder.Property(book => book.Category).IsRequired();*/
+            builder.Property(book => book.PublisherId).IsRequired();
+            builder.Property(book => book.CategoryId).IsRequired();
         }
     }
 }
