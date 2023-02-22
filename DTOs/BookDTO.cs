@@ -28,7 +28,7 @@ namespace BookstoreSystem.DTOs
         public int? Edition { get; set; }
 
         [Required]
-        public List<WriterDTO> Writer { get; set; }
+        public List<WriterDTO> Writers { get; set; }
 
         [Required]
         public PublisherDTO Publisher { get; set; }
