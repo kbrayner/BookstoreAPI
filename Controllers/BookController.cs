@@ -45,6 +45,10 @@ namespace BookstoreSystem.Controllers
         [HttpPost]
         public async Task<ActionResult<BookDTO>> Add([FromBody] CreateBookDTO creatBookDTO)
         {
+            if (_bookRepository.BookTitleExists(creatBookDTO.Title))
+            {
+                return BadRequest("You cannot use this title. It already exists.");
+            }
             Book book = _mapper.Map<Book>(creatBookDTO);
 
             Book savedBook = await _bookRepository.Add(book);
@@ -55,6 +59,10 @@ namespace BookstoreSystem.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<BookDTO>> Update([FromBody] BookDTO bookDTO, int id)
         {
+            if (_bookRepository.BookTitleExists(bookDTO.Title))
+            {
+                return BadRequest("You cannot use this title. It already exists.");
+            }
             bookDTO.Id = id;
             Book book = _mapper.Map<Book>(bookDTO);
 
