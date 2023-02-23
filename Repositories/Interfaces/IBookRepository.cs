@@ -4,7 +4,7 @@ namespace BookstoreSystem.Repositories.Interfaces
 {
     public interface IBookRepository
     {
-        Task<Book> GetById(int id);
+        Task<Book?> GetById(int id);
         Task<List<Book>> GetByTitle(string title);
         Task<List<Book>> GetAll();
         Task<Book> Add(Book book);

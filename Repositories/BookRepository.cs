@@ -13,17 +13,29 @@ namespace BookstoreSystem.Repositories
             _dbContext = bookstoreSystemDBContext;
         }
 
-        public async Task<Book> GetById(int id)
+        public async Task<Book?> GetById(int id)
         {
-            return await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Books
+                .Include(book => book.Category)
+                .Include(book => book.Publisher)
+                .Include(book => book.Writers)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task<List<Book>> GetByTitle(string title)
         {
-            return await _dbContext.Books.Where(x => x.Title.Contains(title)).ToListAsync();
+            return await _dbContext.Books
+                .Include(book => book.Category)
+                .Include(book => book.Publisher)
+                .Include(book => book.Writers)
+                .Where(x => x.Title.Contains(title)).ToListAsync();
         }
         public async Task<List<Book>> GetAll()
         {
-            return await _dbContext.Books.ToListAsync();
+            return await _dbContext.Books
+                .Include(book => book.Category)
+                .Include(book => book.Publisher)
+                .Include(book => book.Writers)
+                .ToListAsync();
         }
         public async Task<Book> Add(Book book)
         {
