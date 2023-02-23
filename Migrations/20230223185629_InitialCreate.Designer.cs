@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookstoreSystem.Migrations
 {
     [DbContext(typeof(BookstoreSystemDBContext))]
-    [Migration("20230222002042_InitialDB")]
-    partial class InitialDB
+    [Migration("20230223185629_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
