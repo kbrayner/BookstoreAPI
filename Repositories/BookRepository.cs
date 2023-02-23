@@ -67,5 +67,10 @@ namespace BookstoreSystem.Repositories
         {
             return await _dbContext.Books.Where(x => x.Id == id).ExecuteDeleteAsync();
         }
+
+        public bool BookTitleExists(string title)
+        {
+            return  _dbContext.Books.Any(x => x.Title == title);
+        }
     }
 }
