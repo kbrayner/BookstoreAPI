@@ -26,12 +26,12 @@ namespace BookstoreSystem.DTOs
         public int? Edition { get; set; }
 
         [Required]
-        public List<Writer> Writer { get; set; }
+        public List<int> WriterIds { get; set; }
 
         [Required]
-        public Publisher Publisher { get; set; }
+        public int PublisherId { get; set; }
 
         [Required]
-        public Category Category { get; set; }
+        public int CategoryId { get; set; }
     }
 }

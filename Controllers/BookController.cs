@@ -43,9 +43,9 @@ namespace BookstoreSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BookDTO>> Add([FromBody] BookDTO bookDTO)
+        public async Task<ActionResult<BookDTO>> Add([FromBody] CreateBookDTO creatBookDTO)
         {
-            Book book = _mapper.Map<Book>(bookDTO);
+            Book book = _mapper.Map<Book>(creatBookDTO);
 
             Book savedBook = await _bookRepository.Add(book);
 
