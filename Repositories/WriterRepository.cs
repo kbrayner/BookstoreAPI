@@ -20,7 +20,7 @@ namespace BookstoreSystem.Repositories
         }
         public async Task<List<Writer>> GetByName(string name)
         {
-            return await _dbContext.Writers.Where(x => x.Name.Contains(name)).ToListAsync();
+            return await _dbContext.Writers.Where(x => EF.Functions.ILike(x.Name, $"%{name}%")).ToListAsync();
         }
         public async Task<List<Writer>> GetAll()
         {

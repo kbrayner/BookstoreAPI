@@ -27,7 +27,7 @@ namespace BookstoreSystem.Repositories
                 .Include(book => book.Category)
                 .Include(book => book.Publisher)
                 .Include(book => book.Writers)
-                .Where(x => x.Title.Contains(title)).ToListAsync();
+                .Where(x => EF.Functions.ILike(x.Title, $"%{title}%")).ToListAsync();
         }
         public async Task<List<Book>> GetAll()
         {
