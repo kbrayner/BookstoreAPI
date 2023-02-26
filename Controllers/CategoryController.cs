@@ -71,7 +71,7 @@ namespace BookstoreSystem.Controllers
                 return NotFound();
             }
 
-            Category savedCategory = await _categoryRepository.Add(category);
+            Category savedCategory = await _categoryRepository.Update(category, id);
 
             return Ok(_mapper.Map<CategoryDTO>(savedCategory));
         }

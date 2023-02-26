@@ -68,7 +68,7 @@ namespace BookstoreSystem.Controllers
                 return NotFound();
             }
 
-            Publisher savedPublisher = await _publisherRepository.Add(publisher);
+            Publisher savedPublisher = await _publisherRepository.Update(publisher, id);
 
             return Ok(_mapper.Map<PublisherDTO>(savedPublisher));
         }

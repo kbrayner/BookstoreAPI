@@ -73,7 +73,7 @@ namespace BookstoreSystem.Controllers
                 return NotFound();
             }
 
-            Book savedBook = await _bookRepository.Add(book);
+            Book savedBook = await _bookRepository.Update(book, id);
 
             return Ok(_mapper.Map<BookDTO>(savedBook));
         }

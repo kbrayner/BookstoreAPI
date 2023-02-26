@@ -69,7 +69,7 @@ namespace BookstoreSystem.Controllers
                 return NotFound();
             }
 
-            Writer savedWriter = await _writerRepository.Add(writer);
+            Writer savedWriter = await _writerRepository.Update(writer, id);
 
             return Ok(_mapper.Map<WriterDTO>(savedWriter));
         }
