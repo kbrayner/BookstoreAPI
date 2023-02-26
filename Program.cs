@@ -10,8 +10,19 @@ namespace BookstoreSystem
     {
         public static void Main(string[] args)
         {
+            var BookstoreAllowSpecificOrigins = "_bookstoreAllowSpecificOrigins";
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(BookstoreAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:4200")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                                  });
+            });
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -40,6 +51,8 @@ namespace BookstoreSystem
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors(BookstoreAllowSpecificOrigins);
 
             app.UseAuthorization();
 
