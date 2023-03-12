@@ -9,6 +9,7 @@ namespace BookstoreSystem.Data.Map
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.HasKey(category => category.Id);
+            builder.HasIndex(category => category.Name).IsUnique();
             builder.Property(category => category.Name).IsRequired().HasMaxLength(100);
         }
     }
