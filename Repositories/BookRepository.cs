@@ -21,7 +21,7 @@ namespace BookstoreSystem.Repositories
                 .Include(book => book.Writers)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<List<Book>> GetByTitle(string title)
+        public async Task<List<Book>> ListByTitle(string title)
         {
             return await _dbContext.Books
                 .Include(book => book.Category)

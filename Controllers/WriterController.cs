@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BookstoreSystem.DTOs;
 using BookstoreSystem.Models;
 using BookstoreSystem.Repositories.Interfaces;
@@ -29,7 +29,7 @@ namespace BookstoreSystem.Controllers
             }
             else
             {
-                writers = await _writerRepository.GetByName(name);
+                writers = await _writerRepository.ListByName(name);
             }
 
             return Ok(_mapper.Map<IEnumerable<WriterDTO>>(writers));
@@ -38,7 +38,7 @@ namespace BookstoreSystem.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<WriterDTO>> GetById(int id)
         {
-            Writer writer = await _writerRepository.GetById(id);
+            Writer? writer = await _writerRepository.GetById(id);
             if (writer == null)
             {
                 return NotFound();

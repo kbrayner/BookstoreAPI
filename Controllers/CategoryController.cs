@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BookstoreSystem.DTOs;
 using BookstoreSystem.Models;
 using BookstoreSystem.Repositories;
@@ -31,7 +31,7 @@ namespace BookstoreSystem.Controllers
             }
             else
             {
-                categories = await _categoryRepository.GetByName(name);
+                categories = await _categoryRepository.ListByName(name);
             }
 
             return Ok(_mapper.Map<IEnumerable<CategoryDTO>>(categories));
@@ -40,7 +40,7 @@ namespace BookstoreSystem.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryDTO>> GetById(int id)
         {
-            Category category = await _categoryRepository.GetById(id);
+            Category? category = await _categoryRepository.GetById(id);
             if (category == null) 
             { 
                 return NotFound();

@@ -14,11 +14,11 @@ namespace BookstoreSystem.Repositories
             _dbContext = bookstoreSystemDBContext;
         }
 
-        public async Task<Publisher> GetById(int id)
+        public async Task<Publisher?> GetById(int id)
         {
             return await _dbContext.Publishers.FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<List<Publisher>> GetByName(string name)
+        public async Task<List<Publisher>> ListByName(string name)
         {
             return await _dbContext.Publishers.Where(x => EF.Functions.ILike(x.Name, $"%{name}%")).ToListAsync();
         }

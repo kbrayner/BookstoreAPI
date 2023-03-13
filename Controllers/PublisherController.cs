@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BookstoreSystem.DTOs;
 using BookstoreSystem.Models;
 using BookstoreSystem.Repositories.Interfaces;
@@ -28,7 +28,7 @@ namespace BookstoreSystem.Controllers
             }
             else
             {
-                publishers = await _publisherRepository.GetByName(name);
+                publishers = await _publisherRepository.ListByName(name);
             }
 
             return Ok(_mapper.Map<IEnumerable<PublisherDTO>>(publishers));
@@ -37,7 +37,7 @@ namespace BookstoreSystem.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PublisherDTO>> GetById(int id)
         {
-            Publisher publisher = await _publisherRepository.GetById(id);
+            Publisher? publisher = await _publisherRepository.GetById(id);
             if (publisher == null)
             {
                 return NotFound();

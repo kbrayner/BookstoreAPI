@@ -4,8 +4,8 @@ namespace BookstoreSystem.Repositories.Interfaces
 {
     public interface IWriterRepository
     {
-        Task<Writer> GetById(int id);
-        Task<List<Writer>> GetByName(string name);
+        Task<Writer?> GetById(int id);
+        Task<List<Writer>> ListByName(string name);
         Task<List<Writer>> GetAll();
         Task<Writer> Add(Writer writer);
         bool IdExists(int id);

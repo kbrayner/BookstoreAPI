@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BookstoreSystem.DTOs;
 using BookstoreSystem.Models;
 using BookstoreSystem.Repositories;
@@ -29,7 +29,7 @@ namespace BookstoreSystem.Controllers
             }
             else
             {
-                books = await _bookRepository.GetByTitle(title);
+                books = await _bookRepository.ListByTitle(title);
             }
             
             return Ok(_mapper.Map<IEnumerable<BookDTO>>(books));

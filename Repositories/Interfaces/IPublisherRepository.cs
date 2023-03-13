@@ -4,8 +4,8 @@ namespace BookstoreSystem.Repositories.Interfaces
 {
     public interface IPublisherRepository
     {
-        Task<Publisher> GetById(int id);
-        Task<List<Publisher>> GetByName(string name);
+        Task<Publisher?> GetById(int id);
+        Task<List<Publisher>> ListByName(string name);
         Task<List<Publisher>> GetAll();
         Task<Publisher> Add(Publisher publisher);
         bool IdExists(int id);
