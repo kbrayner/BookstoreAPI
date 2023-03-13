@@ -1,9 +1,10 @@
-using AutoMapper;
+﻿using AutoMapper;
 using BookstoreSystem.DTOs;
 using BookstoreSystem.Models;
-using BookstoreSystem.Repositories;
 using BookstoreSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace BookstoreSystem.Controllers
 {
@@ -45,24 +46,34 @@ namespace BookstoreSystem.Controllers
         [HttpPost]
         public async Task<ActionResult<BookDTO>> Add([FromBody] CreateBookDTO creatBookDTO)
         {
-            if (_bookRepository.BookTitleExists(creatBookDTO.Title))
-            {
-                return BadRequest("You cannot use this title. It already exists.");
-            }
             Book book = _mapper.Map<Book>(creatBookDTO);
 
-            Book savedBook = await _bookRepository.Add(book);
-
-            return Ok(_mapper.Map<BookDTO>(savedBook));
+            try
+            {
+                Book savedBook = await _bookRepository.Add(book);
+                return Ok(_mapper.Map<BookDTO>(savedBook));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException is PostgresException pgEx)
+                {
+                    if (pgEx.SqlState == "23505") // Unique violation code
+                    {
+                        return BadRequest("Could not create the Book because it already exists a book with this title");
+                    }
+                }
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not create a Book: {ex.Message}");
+                throw new Exception("Could not create the Book. Please try it later.");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<BookDTO>> Update([FromBody] BookDTO bookDTO, int id)
         {
-            if (_bookRepository.BookTitleExists(bookDTO.Title))
-            {
-                return BadRequest("You cannot use this title. It already exists.");
-            }
             bookDTO.Id = id;
             Book book = _mapper.Map<Book>(bookDTO);
 
@@ -73,9 +84,27 @@ namespace BookstoreSystem.Controllers
                 return NotFound();
             }
 
-            Book savedBook = await _bookRepository.Update(book, id);
-
-            return Ok(_mapper.Map<BookDTO>(savedBook));
+            try
+            {
+                Book savedBook = await _bookRepository.Update(book, id);
+                return Ok(_mapper.Map<BookDTO>(savedBook));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException is PostgresException pgEx)
+                {
+                    if (pgEx.SqlState == "23505") // Unique violation code
+                    {
+                        return BadRequest("Could not udpate the Book because it already exists a book with this title");
+                    }
+                }
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not update a Book: {ex.Message}");
+                throw new Exception("Could not update the Book. Please try it later.");
+            }
         }
 
         [HttpDelete("{id}")]

@@ -1,10 +1,10 @@
-using AutoMapper;
+﻿using AutoMapper;
 using BookstoreSystem.DTOs;
 using BookstoreSystem.Models;
-using BookstoreSystem.Repositories;
 using BookstoreSystem.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace BookstoreSystem.Controllers
 {
@@ -53,9 +53,27 @@ namespace BookstoreSystem.Controllers
         {
             Category category = _mapper.Map<Category>(categoryDTO);
 
-            Category savedCategory = await _categoryRepository.Add(category);
-
-            return Ok(_mapper.Map<CategoryDTO>(savedCategory));
+            try
+            {
+                Category savedCategory = await _categoryRepository.Add(category);
+                return Ok(_mapper.Map<CategoryDTO>(savedCategory));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException is PostgresException pgEx)
+                {
+                    if (pgEx.SqlState == "23505") // Unique violation code
+                    {
+                        return BadRequest("Could not create the Category because it already exists a category with this name");
+                    }
+                }
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not create a Category: {ex.Message}");
+                throw new Exception("Could not create the Category. Please try it later.");
+            }
         }
 
         [HttpPut("{id}")]
@@ -71,9 +89,27 @@ namespace BookstoreSystem.Controllers
                 return NotFound();
             }
 
-            Category savedCategory = await _categoryRepository.Update(category, id);
-
-            return Ok(_mapper.Map<CategoryDTO>(savedCategory));
+            try
+            {
+                Category savedCategory = await _categoryRepository.Update(category, id);
+                return Ok(_mapper.Map<CategoryDTO>(savedCategory));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException is PostgresException pgEx)
+                {
+                    if (pgEx.SqlState == "23505") // Unique violation code
+                    {
+                        return BadRequest("Could not update the Category because it already exists a category with this name");
+                    }
+                }
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not update a Category: {ex.Message}");
+                throw new Exception("Could not update the Category. Please try it later.");
+            }
         }
 
         [HttpDelete("{id}")]

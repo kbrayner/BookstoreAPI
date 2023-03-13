@@ -1,9 +1,10 @@
-using AutoMapper;
+﻿using AutoMapper;
 using BookstoreSystem.DTOs;
 using BookstoreSystem.Models;
 using BookstoreSystem.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace BookstoreSystem.Controllers
 {
@@ -51,9 +52,27 @@ namespace BookstoreSystem.Controllers
         {
             Writer writer = _mapper.Map<Writer>(writerDTO);
 
-            Writer savedWriter = await _writerRepository.Add(writer);
-
-            return Ok(_mapper.Map<WriterDTO>(savedWriter));
+            try
+            {
+                Writer savedWriter = await _writerRepository.Add(writer);
+                return Ok(_mapper.Map<WriterDTO>(savedWriter));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException is PostgresException pgEx)
+                {
+                    if (pgEx.SqlState == "23505") // Unique violation code
+                    {
+                        return BadRequest("Could not update the Writer because it already exists a writer with this name");
+                    }
+                }
+                throw ex;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Could not update a Writer: {ex.Message}");
+                throw new Exception("Could not update the Writer. Please try it later.");
+            }
         }
 
         [HttpPut("{id}")]
@@ -69,9 +88,28 @@ namespace BookstoreSystem.Controllers
                 return NotFound();
             }
 
-            Writer savedWriter = await _writerRepository.Update(writer, id);
+            try
+            {
+                Writer savedWriter = await _writerRepository.Update(writer, id);
 
-            return Ok(_mapper.Map<WriterDTO>(savedWriter));
+                return Ok(_mapper.Map<WriterDTO>(savedWriter));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException is PostgresException pgEx)
+                {
+                    if (pgEx.SqlState == "23505") // Unique violation code
+                    {
+                        return BadRequest("Could not add the Writer because it already exists a writer with this name");
+                    }
+                }
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not add a Writer: {ex.Message}");
+                throw new Exception("Could not add the Writer. Please try it later.");
+            }
         }
 
         [HttpDelete("{id}")]

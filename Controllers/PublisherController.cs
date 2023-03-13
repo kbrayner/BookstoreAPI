@@ -1,8 +1,10 @@
-using AutoMapper;
+﻿using AutoMapper;
 using BookstoreSystem.DTOs;
 using BookstoreSystem.Models;
 using BookstoreSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace BookstoreSystem.Controllers
 {
@@ -50,9 +52,27 @@ namespace BookstoreSystem.Controllers
         {
             Publisher publisher = _mapper.Map<Publisher>(publisherDTO);
 
-            Publisher savedPublisher = await _publisherRepository.Add(publisher);
-
-            return Ok(_mapper.Map<PublisherDTO>(savedPublisher));
+            try
+            {
+                Publisher savedPublisher = await _publisherRepository.Add(publisher);
+                return Ok(_mapper.Map<PublisherDTO>(savedPublisher));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException is PostgresException pgEx)
+                {
+                    if (pgEx.SqlState == "23505") // Unique violation code
+                    {
+                        return BadRequest("Could not create the Publisher because it already exists a publisher with this name");
+                    }
+                }
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not create a Publisher: {ex.Message}");
+                throw new Exception("Could not create the Publisher. Please try it later.");
+            }
         }
 
         [HttpPut("{id}")]
@@ -68,9 +88,27 @@ namespace BookstoreSystem.Controllers
                 return NotFound();
             }
 
-            Publisher savedPublisher = await _publisherRepository.Update(publisher, id);
-
-            return Ok(_mapper.Map<PublisherDTO>(savedPublisher));
+            try
+            {
+                Publisher savedPublisher = await _publisherRepository.Update(publisher, id);
+                return Ok(_mapper.Map<PublisherDTO>(savedPublisher));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException is PostgresException pgEx)
+                {
+                    if (pgEx.SqlState == "23505") // Unique violation code
+                    {
+                        return BadRequest("Could not update the Publisher because it already exists a publisher with this name");
+                    }
+                }
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not update a Publisher: {ex.Message}");
+                throw new Exception("Could not update the Publisher. Please try it later.");
+            }
         }
 
         [HttpDelete("{id}")]
